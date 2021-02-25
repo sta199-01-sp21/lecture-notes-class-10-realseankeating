@@ -112,6 +112,8 @@ prop.table(counts)
 
 How close is this value to the "true" probability?
 
+Each marble is extremely close to the "true" probability, but it could get closer with more trials. The greater the number of trials, the closer we get to the "true" probability.
+
 **To summarize our process:**
 
 1. We defined the sample space for our experiment - `marbles`
@@ -167,18 +169,29 @@ Perform a simulation to compute this empirical probability.
 
 Write down your guess to the answer before you calculate it.
 
-```{r simulate_rolls}
+My guess is that the absolute value of the difference between dice 1 and 2 is equal to 4.
 
+```{r simulate_rolls}
+roll_results <- tibble(
+  die_1 = replicate(n = 10,000, expr = sample(1:6, size = 1)),
+  die_2 = replicate(n = 10,000, expr = sample(1:6, size = 1))
+)
 ```
 
 ```{r identify_events}
-
+roll_results <- roll_results %>%
+  mutate(event_1 = die_1 ^ 2 == die_2,
+         event_2 = abs(die_1 - die_2) == 4)
+roll_results
 ```
 
 ```{r summarize_rolls}
-
+roll_results %>%
+  summarise(event_1_prob = mean(event_1), 
+            event_2_prob = mean(event_2))
 ```
 
+Event 1 is more likely actually, as 0.2>0.1
 ## Additional Resources-please look at before Weds.
 
 - [Open Intro Stats](https://www.openintro.org/book/os/) Sections 3.1 and 3.2
